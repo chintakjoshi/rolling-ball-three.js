@@ -6,32 +6,8 @@ const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-function createChessboardTexture() {
-    const canvas = document.createElement('canvas');
-    const size = 64; // Texture size
-    canvas.width = canvas.height = size;
-    const context = canvas.getContext('2d');
-
-    // Reduce the number of squares for larger size
-    const squaresPerSide = 4;  // Fewer squares per side
-    const squareSize = size / squaresPerSide; // Each square size is larger
-
-    for (let x = 0; x < squaresPerSide; x++) {
-        for (let y = 0; y < squaresPerSide; y++) {
-            context.fillStyle = (x + y) % 2 === 0 ? 'white' : '#A6A453'; // Alternate colors
-            context.fillRect(x * squareSize, y * squareSize, squareSize, squareSize);
-        }
-    }
-
-    const texture = new THREE.CanvasTexture(canvas);
-    texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-    texture.repeat.set(100 / squaresPerSide, 100 / squaresPerSide); // Adjust texture repeats based on plane size
-    return texture;
-}
-
-
+const planeMaterial = new THREE.MeshBasicMaterial({ color: 0xFFFDD0 }); // Cream color
 const planeGeometry = new THREE.PlaneGeometry(100, 100);
-const planeMaterial = new THREE.MeshBasicMaterial({ map: createChessboardTexture(), side: THREE.DoubleSide });
 const plane = new THREE.Mesh(planeGeometry, planeMaterial);
 plane.rotation.x = -Math.PI / 2;
 scene.add(plane);
