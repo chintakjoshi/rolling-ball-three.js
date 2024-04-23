@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
@@ -69,15 +70,39 @@ function onDocumentKeyDown(event) {
 }
 
 const objects = [];
+const loader = new GLTFLoader();
+let loadedObjects = 0;
+
 function createObjects() {
-    const numObjects = 10; // Adjust as needed
+    const numObjects = 5;
+    const modelPaths = [
+        './gltf/garbage1/scene.gltf',
+        './gltf/garbage2/scene.gltf',
+        './gltf/garbage3/scene.gltf',
+        './gltf/garbage4/scene.gltf',
+        './gltf/garbage5/scene.gltf'
+    ];
+
     for (let i = 0; i < numObjects; i++) {
-        const objectGeometry = new THREE.SphereGeometry(2, 16, 16);
-        const objectMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-        const object = new THREE.Mesh(objectGeometry, objectMaterial);
-        object.position.set(Math.random() * 80 - 40, 2, Math.random() * 80 - 40);
-        scene.add(object);
-        objects.push(object);
+        loader.load(
+            modelPaths[i],
+            function (gltf) {
+                const model = gltf.scene;
+                model.position.set(Math.random() * 80 - 40, 2, Math.random() * 80 - 40);
+                model.scale.set(0.5, 0.5, 0.5);
+                scene.add(model);
+                objects.push(model);
+
+                loadedObjects++;
+                if (loadedObjects === numObjects && !animationId) {
+                    animate(); // Start animation after all models are loaded
+                }
+            },
+            undefined,
+            function (error) {
+                console.error('An error happened while loading a GLTF model:', error);
+            }
+        );
     }
 }
 createObjects();
@@ -85,27 +110,28 @@ createObjects();
 function checkCollisions() {
     const ballRadius = sphere.scale.x * sphere.geometry.parameters.radius; // Correct radius calculation considering scale
     const ballBoundingSphere = new THREE.Sphere(sphere.position, ballRadius);
-    
+
     for (let i = objects.length - 1; i >= 0; i--) {
         const object = objects[i];
-        const objectRadius = object.geometry.parameters.radius; // Assuming uniform size objects
-        const objectBoundingSphere = new THREE.Sphere(object.position, objectRadius);
 
-        if (ballBoundingSphere.intersectsSphere(objectBoundingSphere)) {
+        // Compute the bounding box for the object
+        const boundingBox = new THREE.Box3().setFromObject(object);
+
+        // Check for intersection with the sphere's bounding sphere
+        if (boundingBox.intersectsSphere(ballBoundingSphere)) {
             scene.remove(object);
             objects.splice(i, 1);
-            // Apply a smaller scaling factor or ensure it scales only if a collision is confirmed
-            sphere.scale.multiplyScalar(1.05); // Scale up by 5%
+            sphere.scale.multiplyScalar(1.05); // Optionally scale the sphere upon collision
         }
     }
 }
 
 
 function checkGameOver() {
-    if (Math.abs(sphere.position.x) > 50 || Math.abs(sphere.position.z) > 50) {
-        gameOver('You went out of bounds!');
-    } else if (objects.length === 0) {
+    if (objects.length === 0 && loadedObjects === 5) { // Ensure all objects are supposed to be loaded
         gameOver('Congratulations, you\'ve collected all objects!');
+    } else if (Math.abs(sphere.position.x) > 50 || Math.abs(sphere.position.z) > 50) {
+        gameOver('You went out of bounds!');
     }
 }
 
@@ -118,20 +144,22 @@ function gameOver(message) {
 }
 
 function restartGame() {
+    cancelAnimationFrame(animationId);  // Correctly cancels the ongoing animation frame
     const modal = document.getElementById('gameOverModal');
-    modal.style.display = 'none'; // Hide the modal
+    modal.style.display = 'none'; // Properly hides the modal
 
     while (scene.children.length > 0) {
-        scene.remove(scene.children[0]);
+        scene.remove(scene.children[0]);  // Clears the scene of all objects
     }
 
     scene.add(plane);
-    sphere.geometry = new THREE.SphereGeometry(3, 32, 32); // Reset geometry
-    sphere.scale.set(1, 1, 1); // Reset scale
-    sphere.position.set(0, 1.5, 0);
+    sphere.geometry = new THREE.SphereGeometry(3, 32, 32); // Resets the sphere's geometry
+    sphere.scale.set(1, 1, 1); // Correctly resets the scale
+    sphere.position.set(0, 1.5, 0); // Correctly resets the position
     scene.add(sphere);
-    createObjects();
-    animate();
+    loadedObjects = 0; // Properly resets the count of loaded objects
+    objects.length = 0; // Clears the objects array without reassignment
+    createObjects(); // Calls to recreate objects
 }
 
 window.restartGame = restartGame;
