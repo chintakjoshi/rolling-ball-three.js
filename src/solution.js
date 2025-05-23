@@ -1,6 +1,16 @@
 import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 
+let assetsToLoad = 0;
+let assetsLoaded = 0;
+
+function checkAllAssetsLoaded() {
+  if (assetsLoaded >= assetsToLoad) {
+    document.getElementById("loadingOverlay").style.display = "none";
+    document.getElementById("canvas").style.display = "block";
+  }
+}
+
 let renderer, scene, camera;
 const bin_garbage = [
   new THREE.Vector3(10, 1, 5),
@@ -108,40 +118,52 @@ window.init = async () => {
   const loader = new GLTFLoader().setPath("models/blue_garbage_bag/");
 
   for (let i = 0; i < garbagebin1; i++) {
+    assetsToLoad++;
     loader.load("scene.gltf", (gltf) => {
       gltf.scene.scale.set(0.03, 0.03, 0.03);
       gltf.scene.position.copy(bin_garbage[i]);
       scene.add(gltf.scene);
+      assetsLoaded++;
+      checkAllAssetsLoaded();
     });
   }
 
   const loader2 = new GLTFLoader().setPath("models/bin_garbage/");
 
   for (let i = 0; i < garbagebin2; i++) {
+    assetsToLoad++;
     loader2.load("scene.gltf", (gltf) => {
       gltf.scene.scale.set(2, 2, 2);
       gltf.scene.position.copy(blue_garbage_bag[i]);
       scene.add(gltf.scene);
+      assetsLoaded++;
+      checkAllAssetsLoaded();
     });
   }
 
   const loader3 = new GLTFLoader().setPath("models/garbage_bag/");
 
   for (let i = 0; i < garbagebin3; i++) {
+    assetsToLoad++;
     loader3.load("scene.gltf", (gltf) => {
       gltf.scene.scale.set(0.01, 0.01, 0.01);
       gltf.scene.position.copy(garbage_bag[i]);
       scene.add(gltf.scene);
+      assetsLoaded++;
+      checkAllAssetsLoaded();
     });
   }
 
   const loader4 = new GLTFLoader().setPath("models/garbage_bin/");
 
   for (let i = 0; i < garbagebin4; i++) {
+    assetsToLoad++;
     loader4.load("scene.gltf", (gltf) => {
       gltf.scene.scale.set(3, 3, 3);
       gltf.scene.position.copy(garbage_bin_1[i]);
       scene.add(gltf.scene);
+      assetsLoaded++;
+      checkAllAssetsLoaded();
     });
   }
 
