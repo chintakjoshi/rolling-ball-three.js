@@ -6,5 +6,5 @@ npm install
 ```
 2) Run - 
 ```
-npm start
+npm run dev
 ```
