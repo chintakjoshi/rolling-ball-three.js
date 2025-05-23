@@ -6,9 +6,21 @@ let assetsLoaded = 0;
 
 function checkAllAssetsLoaded() {
   if (assetsLoaded >= assetsToLoad) {
-    document.getElementById("loadingOverlay").style.display = "none";
-    document.getElementById("canvas").style.display = "block";
+    triggerCinematicTransition();
   }
+}
+
+function triggerCinematicTransition() {
+  const overlay = document.getElementById("loadingOverlay");
+  overlay.classList.add("fade-out");
+  setTimeout(() => {
+    overlay.style.display = "none";
+    const canvas = document.getElementById("canvas");
+    canvas.style.display = "block";
+    requestAnimationFrame(() => {
+      canvas.style.opacity = "1";
+    });
+  }, 1000);
 }
 
 let renderer, scene, camera;
@@ -169,8 +181,6 @@ window.init = async () => {
 
   camera.position.set(0, 10, 20);
   camera.lookAt(0, 0, 0);
-
-  console.log("made a scene");
 };
 
 function showGameOver() {
@@ -226,6 +236,7 @@ window.loop = (dt, canvas, input) => {
   const minX = -maxX;
   const maxZ = planeSizeFront / 2;
   const minZ = -maxZ;
+  const speedFactor = 2;
 
   if (sphere.position.x <= minX || sphere.position.x >= maxX) {
     angularVelocity.z = 0;
@@ -235,16 +246,16 @@ window.loop = (dt, canvas, input) => {
   }
 
   if (input.keys.has("ArrowUp") && sphere.position.z > minZ) {
-    angularVelocity.x -= delta * 5;
+    angularVelocity.x -= delta * speedFactor;
   }
   if (input.keys.has("ArrowDown") && sphere.position.z < maxZ) {
-    angularVelocity.x += delta * 5;
+    angularVelocity.x += delta * speedFactor;
   }
   if (input.keys.has("ArrowLeft") && sphere.position.x > minX) {
-    angularVelocity.z += delta * 5;
+    angularVelocity.z += delta * speedFactor;
   }
   if (input.keys.has("ArrowRight") && sphere.position.x < maxX) {
-    angularVelocity.z -= delta * 5;
+    angularVelocity.z -= delta * speedFactor;
   }
 
   q.setFromAxisAngle(angularVelocity, delta).normalize();

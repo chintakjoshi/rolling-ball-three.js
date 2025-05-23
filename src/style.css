@@ -1,5 +1,119 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap');
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background-color: black;
+  overflow: hidden;
+}
+
 body {
   height: 100vh;
   width: 100vw;
   margin: 0;
+}
+
+#loadingOverlay {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: black;
+  overflow: hidden;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.cube {
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(45deg, #00ffee, #6643b5);
+  animation: spin3D 2s infinite linear;
+  transform-style: preserve-3d;
+  box-shadow: 0 0 30px #6643b5;
+  z-index: 1;
+}
+
+@keyframes spin3D {
+  0% {
+    transform: rotateX(0deg) rotateY(0deg);
+  }
+
+  100% {
+    transform: rotateX(360deg) rotateY(360deg);
+  }
+}
+
+.loading-text {
+  margin-top: 50px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 20px;
+  color: #6643b5;
+  text-shadow: 0 0 5px #6643b5;
+  z-index: 1;
+  animation: flicker 2s infinite alternate;
+}
+
+@keyframes flicker {
+  0% {
+    opacity: 0.6;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+#canvas {
+  display: none;
+  opacity: 0;
+  transition: opacity 1s ease-in;
+}
+
+.press-start-2p-regular {
+  font-family: "Press Start 2P", system-ui;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 100px;
+  color: black;
+}
+
+.young-serif-regular {
+  font-family: "Young Serif", serif;
+  font-weight: 600;
+  font-style: normal;
+  font-size: 25px;
+}
+
+#gameOverOverlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 100;
+}
+
+#gameOverMessage {
+  position: absolute;
+  width: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  z-index: 101;
+}
+
+.fade-out {
+  transition: opacity 1s ease-out;
+  opacity: 0;
 }
