@@ -1,4 +1,3 @@
-
 let _canvas;
 let _lastFrameTime;
 let _hasInited = false;
@@ -7,23 +6,19 @@ const _input = {
   keys: new Set(),
 };
 
-
 const loop = (time) => {
   if (!_lastFrameTime) {
     _lastFrameTime = time;
   }
 
-
   const dt = time - _lastFrameTime;
   _lastFrameTime = time;
 
-  
   if (_canvas) {
     _canvas.width = _canvas.clientWidth;
     _canvas.height = _canvas.clientHeight;
   }
 
-  
   if (!_hasInited) {
     if (window.init) {
       _hasInited = true;
@@ -32,14 +27,12 @@ const loop = (time) => {
     }
   }
 
-  
   if (window.loop) {
     window.loop(dt, _canvas, _input);
   }
 
   window.requestAnimationFrame(loop);
 };
-
 
 const attachScript = () => {
   const url = `./src/solution.js`;
@@ -66,10 +59,8 @@ window.loadShader = async ({ gl, name, type }) => {
 };
 
 window.onload = () => {
-  // get the <canvas /> DOM element
   _canvas = document.getElementById("canvas");
 
-  // add handlers
   document.addEventListener("keydown", (event) => {
     const key = event.key;
     _input.keys.add(key);
