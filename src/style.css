@@ -133,3 +133,16 @@ body {
 #playAgainButton:hover {
   background-color: #444;
 }
+
+#counterDisplay {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 20px;
+  font-family: 'Press Start 2P', cursive;
+  color: white;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 8px 12px;
+  border-radius: 8px;
+  z-index: 1000;
+}

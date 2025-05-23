@@ -195,6 +195,14 @@ function showGameOver() {
 }
 
 let garbagebincollected = 0;
+const totalGarbageBins = garbagebin1 + garbagebin2 + garbagebin3 + garbagebin4;
+const counterDisplay = document.getElementById("counterDisplay");
+
+function updateCounterDisplay() {
+  counterDisplay.textContent = `(${garbagebincollected}/${totalGarbageBins})`;
+}
+updateCounterDisplay();
+
 let gameRunning = true;
 let restartRequested = false;
 
@@ -223,6 +231,7 @@ window.loop = (dt, canvas, input) => {
       garbagetin.isAttached = true;
       garbagetin.scale.copy(originalScale);
       garbagebincollected++;
+      updateCounterDisplay();
       if (
         garbagebincollected >=
         garbagebin1 + garbagebin2 + garbagebin3 + garbagebin4
