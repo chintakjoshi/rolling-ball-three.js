@@ -47,7 +47,7 @@ const angularVelocity = new THREE.Vector3();
 
 let delta = 0;
 
-window.init = async (canvas) => {
+window.init = async () => {
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera(
     75,
