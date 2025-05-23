@@ -187,15 +187,24 @@ function showGameOver() {
   const gameOverOverlay = document.getElementById("gameOverOverlay");
   if (gameOverOverlay) {
     gameOverOverlay.style.display = "block";
+    const playAgainButton = document.getElementById("playAgainButton");
+    playAgainButton.onclick = () => {
+      restartRequested = true;
+    };
   }
 }
+
 let garbagebincollected = 0;
 let gameRunning = true;
+let restartRequested = false;
 
 window.loop = (dt, canvas, input) => {
   delta = Math.min(dt, 0.03);
 
   if (!gameRunning) {
+    if (restartRequested) {
+      location.reload();
+    }
     return;
   }
 
