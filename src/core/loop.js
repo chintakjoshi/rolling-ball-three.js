@@ -77,7 +77,7 @@ export function resetCollectedCount() {
 function applyJoystickMovement(joystickInput, angularVelocity, delta) {
   const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
-  const baseSpeed = isMobile ? 3.2 : 2;
+  const baseSpeed = isMobile ? 5 : 2;
 
   const strength = Math.min(Math.sqrt(joystickInput.x ** 2 + joystickInput.y ** 2), 1);
 
