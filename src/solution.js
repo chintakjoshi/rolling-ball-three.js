@@ -188,8 +188,10 @@ function showGameOver() {
   if (gameOverOverlay) {
     gameOverOverlay.style.display = "block";
     const playAgainButton = document.getElementById("playAgainButton");
-    playAgainButton.onclick = () => {
-      restartRequested = true;
+    playAgainButton.onclick = async () => {
+      await resetGame();
+      const gameOverOverlay = document.getElementById("gameOverOverlay");
+      gameOverOverlay.style.display = "none";
     };
   }
 }
@@ -210,9 +212,6 @@ window.loop = (dt, canvas, input) => {
   delta = Math.min(dt, 0.03);
 
   if (!gameRunning) {
-    if (restartRequested) {
-      location.reload();
-    }
     return;
   }
 
@@ -290,3 +289,26 @@ window.loop = (dt, canvas, input) => {
 
   renderer.render(scene, camera);
 };
+
+async function resetGame() {
+  while (scene.children.length > 0) {
+    scene.remove(scene.children[0]);
+  }
+
+  if (renderer && renderer.domElement) {
+    renderer.domElement.remove();
+  }
+
+  garbagebincollected = 0;
+  gameRunning = true;
+  restartRequested = false;
+  assetsLoaded = 0;
+  assetsToLoad = 0;
+  updateCounterDisplay();
+
+  await window.init();
+
+  const canvas = document.getElementById("canvas");
+  canvas.style.display = "block";
+  canvas.style.opacity = "1";
+}
