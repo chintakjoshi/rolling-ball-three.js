@@ -35,7 +35,7 @@ const loop = (time) => {
 };
 
 const attachScript = () => {
-  const url = `./src/solution.js`;
+  const url = `./src/main.js`;
   const scriptTag = document.createElement("script");
   scriptTag.src = url;
   scriptTag.type = "module";
