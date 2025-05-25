@@ -3,6 +3,7 @@ import { scene, camera, renderer } from "./initScene.js";
 import { updateCounterDisplay } from "../utils/counterDisplay.js";
 import { showGameOver } from "../utils/gameOverUI.js";
 import { applyMovement, enforceBounds } from "../utils/movement.js";
+import { joystickInput } from "../utils/mobileJoystick.js";
 
 const v0 = new THREE.Vector3();
 const q = new THREE.Quaternion();
@@ -50,6 +51,7 @@ export function gameLoop(dt, canvas, input) {
 
     enforceBounds(sphere, angularVelocity);
     applyMovement(input, angularVelocity, delta);
+    applyJoystickMovement(joystickInput, angularVelocity, delta);
     q.setFromAxisAngle(angularVelocity, delta).normalize();
     sphere.applyQuaternion(q);
     angularVelocity.lerp(v0, 0.01);
@@ -70,4 +72,10 @@ export function setGameRunning(state) {
 
 export function resetCollectedCount() {
     garbagebincollected = 0;
+}
+
+function applyJoystickMovement(joystickInput, angularVelocity, delta) {
+    const speedFactor = 2;
+    angularVelocity.x += joystickInput.y * delta * speedFactor;
+    angularVelocity.z -= joystickInput.x * delta * speedFactor;
 }
