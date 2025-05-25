@@ -14,6 +14,26 @@
       }
     }
   </script>
+  <script>
+    window.__joystickReady = false;
+
+    window.addEventListener("DOMContentLoaded", () => {
+      if (/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        const zone = document.createElement("div");
+        zone.id = "joystick-zone";
+        document.body.appendChild(zone);
+        window.nippleManager = nipplejs.create({
+          zone: zone,
+          mode: "dynamic",
+          color: "white",
+          size: 90,
+          restOpacity: 0.6,
+          fadeTime: 150
+        });
+        window.__joystickReady = true;
+      }
+    });
+  </script>
   <script type="module" src="./src/app.js"></script>
   <script src="./lib/nipplejs.min.js"></script>
 </head>

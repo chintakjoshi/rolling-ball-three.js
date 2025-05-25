@@ -76,6 +76,6 @@ export function resetCollectedCount() {
 
 function applyJoystickMovement(joystickInput, angularVelocity, delta) {
     const speedFactor = 2;
-    angularVelocity.x += joystickInput.y * delta * speedFactor;
+    angularVelocity.x -= joystickInput.y * delta * speedFactor;
     angularVelocity.z -= joystickInput.x * delta * speedFactor;
 }
